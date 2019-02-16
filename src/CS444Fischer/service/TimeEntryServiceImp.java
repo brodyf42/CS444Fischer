@@ -50,7 +50,7 @@ public class TimeEntryServiceImp implements ITimeEntryService{
     public Collection<TimeEntry> getTimeEntriesforAccountID(int accountID) {
         ArrayList list = new ArrayList();
         
-        for (var timeEntry : TIME_ENTRIES.values()) {
+        for (TimeEntry timeEntry : TIME_ENTRIES.values()) {
             if(timeEntry.getAccountID() == accountID){
                 list.add(timeEntry);
             }

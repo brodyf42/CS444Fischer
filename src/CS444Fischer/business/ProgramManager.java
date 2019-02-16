@@ -82,7 +82,7 @@ public class ProgramManager {
     public static void attemptLogin(String username, String password) {
 		Login login = new Login(username, password);
 
-		for (var login2 : loginSvc.getAllLogins()) {
+		for (Login login2 : loginSvc.getAllLogins()) {
 			if (login.equals(login2)) {
 			activeAccount = accountSvc.getAccountByID(login2.getAccountID());
 			goToMainFrame(loginFrame);
@@ -109,7 +109,7 @@ public class ProgramManager {
 		}
 
 		// check if login for username already exists
-		for (var login2 : loginSvc.getAllLogins()) {
+		for (Login login2 : loginSvc.getAllLogins()) {
 			if (username.equals(login2.getUsername())) {
 			JOptionPane.showMessageDialog(createAccountFrame, "The given username already exists.\nPlease select another username.", "Username Unavailable", JOptionPane.WARNING_MESSAGE);
 			return;
