@@ -5,8 +5,7 @@
  */
 package CS444Fischer.domain;
 
-import java.util.ArrayList;
-import java.util.TreeSet;
+
 import junit.framework.TestCase;
 
 /**

@@ -74,7 +74,9 @@ public class ProgramManager {
 		sourceFrame.dispose();
 		mainFrame = new MainFrame();
 		mainFrame.setVisible(true);
-		populateMainFrame();
+		if(activeAccount != null){
+			populateMainFrame();
+		}
     }
     // </editor-fold>
 
@@ -170,8 +172,6 @@ public class ProgramManager {
 			return;
 		}
 		
-		reportFatalError();
-		
 		try {
 			newDate = dateFormat.parse(date);
 			TimeEntry newTE = new TimeEntry(activeAccount.getID(),title, newDate, newDuration, category, notes);
@@ -186,7 +186,7 @@ public class ProgramManager {
 		accountSvc.updateAccount(activeAccount);
 		
 		// remove after retrieve operation is implemented
-		JOptionPane.showMessageDialog(mainFrame, "New Entry with following information added successfully\n\nTitle: "+title+"\nNotes: "+notes+"\nDuration: "+duration+"\nDate: "+date+"\nCategory "+category, "Success", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(mainFrame, "New Entry with following information added successfully\n\nTitle: "+title+"\nNotes: "+notes+"\nDuration: "+duration+"\nDate: "+date+"\nCategory: "+category, "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 
 	private static void populateMainFrame(){
