@@ -10,7 +10,9 @@ import CS444Fischer.service.*;
 import CS444Fischer.domain.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -38,7 +40,8 @@ public class ProgramManager {
     // Domain objects
     private static Account activeAccount;
 	
-	// Helpoer objects
+	// Helper objects
+	private static Date displayDate;
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy");
 
     static {
@@ -50,6 +53,8 @@ public class ProgramManager {
 			Logger.getLogger(ProgramManager.class.getName()).log(Level.SEVERE, null, e);
 			reportFatalError();
 		}
+		
+		displayDate = new Date();
     }
 
     public static void main(String args[]) {
@@ -78,6 +83,18 @@ public class ProgramManager {
 			populateMainFrame();
 		}
     }
+	
+	public static void openChangeDateFrame(){
+		mainFrame.setEnabled(false);
+		changeDateFrame = new ChangeDateFrame();
+		changeDateFrame.setDateFld(dateFormat.format(displayDate));
+		changeDateFrame.setVisible(true);
+	}
+	
+	public static void closeChangeDateFrame(){
+		changeDateFrame.dispose();
+		mainFrame.setEnabled(true);
+	}
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Account and Login Methods">
@@ -146,6 +163,7 @@ public class ProgramManager {
     }
     // </editor-fold>
 
+	// <editor-fold defaultstate="collapsed" desc="Time Entry Creation Methods">
     public static void createTimeEntry(String title, String notes, String duration, String date, String category) {
 		Date newDate;
 		double newDuration;
@@ -185,18 +203,44 @@ public class ProgramManager {
 		activeAccount.setTimeEntries(timeEntrySvc.getTimeEntriesforAccountID(activeAccount.getID()));
 		accountSvc.updateAccount(activeAccount);
 		
-		// remove after retrieve operation is implemented
-		JOptionPane.showMessageDialog(mainFrame, "New Entry with following information added successfully\n\nTitle: "+title+"\nNotes: "+notes+"\nDuration: "+duration+"\nDate: "+date+"\nCategory: "+category, "Success", JOptionPane.INFORMATION_MESSAGE);
+		mainFrame.clearTimeEntryForm();
+		populateMainFrame();
     }
-
+	// </editor-fold>
+	
+	// <editor-fold defaultstate="collapsed" desc="Time Entry Retrieval Methods">
 	private static void populateMainFrame(){
 		mainFrame.setTitle("Personal Time Tracker | " + activeAccount.getLogin().getUsername());
-		Date today = new Date();
-		mainFrame.setEntryDateLbl(dateFormat.format(today));
-		mainFrame.setUsageDateLbl(dateFormat.format(today));
-		mainFrame.setDateFld(dateFormat.format(today));
+		mainFrame.setDisplayedDate(dateFormat.format(displayDate));
+		mainFrame.getTimeEntryTableModel().setTimeEntries(getTimeEntriesForDate(displayDate));
+		mainFrame.getTimeEntryTableModel().fireTableDataChanged();
 	}
 
+	public static void changeDisplayDate(String dateString) {
+		try {
+			displayDate = dateFormat.parse(dateString);
+		} catch (ParseException ex) {
+			Logger.getLogger(ProgramManager.class.getName()).log(Level.SEVERE, null, ex);
+			reportFatalError();
+		}
+		
+		closeChangeDateFrame();
+		populateMainFrame();
+	}
+	
+	private static List<TimeEntry> getTimeEntriesForDate(Date date){
+		ArrayList list = new ArrayList<TimeEntry>();
+		for(TimeEntry te : activeAccount.getTimeEntries()){
+			if (te.getDate().getDay() == date.getDay() &&
+				te.getDate().getMonth() == date.getMonth() &&
+				te.getDate().getYear() == date.getYear()){
+				list.add(te);
+			}
+		}
+		return list;
+	}
+	// </editor-fold>
+	
     private static void reportFatalError() {
 		JOptionPane.showMessageDialog(null, "The program has encountered a serious error and will now close", "Fatal Error", JOptionPane.ERROR_MESSAGE);
 		closeProgram();

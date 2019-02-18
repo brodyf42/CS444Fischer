@@ -13,18 +13,32 @@ import CS444Fischer.business.ProgramManager;
  */
 public class MainFrame extends javax.swing.JFrame {
 
+	private TimeEntryTableModel timeEntryModel;
+	
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         setLocationRelativeTo(null);
         initComponents();
+		timeEntryModel = new TimeEntryTableModel();
+		timeEntryTbl.setModel(timeEntryModel);
 		getRootPane().setDefaultButton(addEntryBtn);
     }
 
-	public void setDateFld(String text){ dateFld.setText(text); }
-	public void setEntryDateLbl(String text){ entryDateLbl.setText(text); }
-	public void setUsageDateLbl(String text){ usageDateLbl.setText(text); }
+	public TimeEntryTableModel getTimeEntryTableModel(){ return timeEntryModel; }
+	
+	public void setDisplayedDate(String dateText){
+		dateFld.setText(dateText);
+		entryDateLbl.setText(dateText);
+		usageDateLbl.setText(dateText);
+	}
+	
+	public void clearTimeEntryForm(){
+		titleFld.setText("");
+		notesFld.setText("");
+		durationFld.setText("0.00");
+	}
 	
     /**
      * This method is called from within the constructor to initialize the form.
@@ -51,7 +65,7 @@ public class MainFrame extends javax.swing.JFrame {
         addEntryBtn = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        timeEntryTbl = new javax.swing.JTable();
         updateEntryBtn = new javax.swing.JButton();
         deleteEntryBtn = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -172,7 +186,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        timeEntryTbl.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"", "", null},
                 {"", "", null},
@@ -201,11 +215,11 @@ public class MainFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setRowHeight(24);
-        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jTable1.setUpdateSelectionOnSort(false);
-        jScrollPane3.setViewportView(jTable1);
+        timeEntryTbl.setRowHeight(24);
+        timeEntryTbl.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        timeEntryTbl.getTableHeader().setReorderingAllowed(false);
+        timeEntryTbl.setUpdateSelectionOnSort(false);
+        jScrollPane3.setViewportView(timeEntryTbl);
 
         updateEntryBtn.setText("View/Edit Entry Details");
 
@@ -267,6 +281,11 @@ public class MainFrame extends javax.swing.JFrame {
 
         changeDateBtn.setText("Change Displayed Date");
         changeDateBtn.setToolTipText("");
+        changeDateBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeDateBtnActionPerformed(evt);
+            }
+        });
 
         entryDateLbl.setText("M/D/YYYY");
 
@@ -359,6 +378,10 @@ public class MainFrame extends javax.swing.JFrame {
         ProgramManager.createTimeEntry(titleFld.getText(), notesFld.getText(), durationFld.getText(), dateFld.getText(), (String) categoryCombo.getSelectedItem());
     }//GEN-LAST:event_addEntryBtnActionPerformed
 
+    private void changeDateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeDateBtnActionPerformed
+        ProgramManager.openChangeDateFrame();
+    }//GEN-LAST:event_changeDateBtnActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addEntryBtn;
     private javax.swing.JComboBox<String> categoryCombo;
@@ -383,11 +406,11 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JButton logoutBtn;
     private javax.swing.JRadioButton monthRadio;
     private javax.swing.JTextArea notesFld;
+    private javax.swing.JTable timeEntryTbl;
     private javax.swing.JTextField titleFld;
     private javax.swing.JButton updateEntryBtn;
     private javax.swing.JLabel usageDateLbl;

@@ -5,6 +5,8 @@
  */
 package CS444Fischer.presentation;
 
+import CS444Fischer.business.ProgramManager;
+
 /**
  *
  * @author Brody Fischer
@@ -15,9 +17,11 @@ public class ChangeDateFrame extends javax.swing.JFrame {
      * Creates new form ChangeDateFrame
      */
     public ChangeDateFrame() {
-        initComponents();
+		initComponents();
     }
 
+	public void setDateFld(String dateText){ dateFld.setText(dateText); }
+	
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,22 +31,33 @@ public class ChangeDateFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        setDateBtn = new javax.swing.JButton();
+        cancelBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
+        dateFld = new javax.swing.JFormattedTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Change Date");
         setResizable(false);
 
-        jButton1.setText("Set Date");
+        setDateBtn.setText("Set Date");
+        setDateBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setDateBtnActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Cancel");
+        cancelBtn.setText("Cancel");
+        cancelBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelBtnActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Enter preferred date:");
 
-        jFormattedTextField1.setToolTipText("");
+        dateFld.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("M/d/yyyy"))));
+        dateFld.setToolTipText("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -54,14 +69,14 @@ public class ChangeDateFrame extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton2)
+                                .addComponent(cancelBtn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1))
+                                .addComponent(setDateBtn))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addGap(69, 69, 69)))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jFormattedTextField1))
+                    .addComponent(dateFld))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -70,21 +85,29 @@ public class ChangeDateFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(dateFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(setDateBtn)
+                    .addComponent(cancelBtn))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void setDateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setDateBtnActionPerformed
+        ProgramManager.changeDisplayDate(dateFld.getText());
+    }//GEN-LAST:event_setDateBtnActionPerformed
+
+    private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
+        ProgramManager.closeChangeDateFrame();
+    }//GEN-LAST:event_cancelBtnActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
+    private javax.swing.JButton cancelBtn;
+    private javax.swing.JFormattedTextField dateFld;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton setDateBtn;
     // End of variables declaration//GEN-END:variables
 }
