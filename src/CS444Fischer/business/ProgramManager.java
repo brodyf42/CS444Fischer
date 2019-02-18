@@ -31,9 +31,9 @@ public class ProgramManager {
     private static ChangeDateFrame changeDateFrame;
 
     // Service objects
-    private static LoginServiceImp loginSvc;
-    private static AccountServiceImp accountSvc;
-    private static TimeEntryServiceImp timeEntrySvc;
+    private static ILoginService loginSvc;
+    private static IAccountService accountSvc;
+    private static ITimeEntryService timeEntrySvc;
 
     // Domain objects
     private static Account activeAccount;
@@ -43,9 +43,9 @@ public class ProgramManager {
 
     static {
 		try {
-			loginSvc = (LoginServiceImp) ServiceFactory.getService(ServiceFactory.Service.LOGIN_SERVICE);
-			accountSvc = (AccountServiceImp) ServiceFactory.getService(ServiceFactory.Service.ACCOUINT_SERVICE);
-			timeEntrySvc = (TimeEntryServiceImp) ServiceFactory.getService(ServiceFactory.Service.TIME_ENTRY_SERVICE);
+			loginSvc = (ILoginService) ServiceFactory.getService(ServiceFactory.Service.LOGIN_SERVICE);
+			accountSvc = (IAccountService) ServiceFactory.getService(ServiceFactory.Service.ACCOUINT_SERVICE);
+			timeEntrySvc = (ITimeEntryService) ServiceFactory.getService(ServiceFactory.Service.TIME_ENTRY_SERVICE);
 		} catch (Exception e) {
 			Logger.getLogger(ProgramManager.class.getName()).log(Level.SEVERE, null, e);
 			reportFatalError();
