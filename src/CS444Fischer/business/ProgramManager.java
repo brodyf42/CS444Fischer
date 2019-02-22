@@ -53,8 +53,6 @@ public class ProgramManager {
 			Logger.getLogger(ProgramManager.class.getName()).log(Level.SEVERE, null, e);
 			reportFatalError();
 		}
-		
-		displayDate = new Date();
     }
 
     public static void main(String args[]) {
@@ -80,6 +78,7 @@ public class ProgramManager {
 		mainFrame = new MainFrame();
 		mainFrame.setVisible(true);
 		if(activeAccount != null){
+			displayDate = new Date();
 			populateMainFrame();
 		}
     }
@@ -159,6 +158,7 @@ public class ProgramManager {
 
     public static void logout() {
 		activeAccount = null;
+		displayDate = null;
 		goToLogin(mainFrame);
     }
     // </editor-fold>

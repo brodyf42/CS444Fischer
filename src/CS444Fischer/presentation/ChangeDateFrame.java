@@ -18,6 +18,8 @@ public class ChangeDateFrame extends javax.swing.JFrame {
      */
     public ChangeDateFrame() {
 		initComponents();
+		setLocationRelativeTo(null);
+        getRootPane().setDefaultButton(setDateBtn);
     }
 
 	public void setDateFld(String dateText){ dateFld.setText(dateText); }
