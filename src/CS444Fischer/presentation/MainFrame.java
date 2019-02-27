@@ -222,8 +222,18 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane3.setViewportView(timeEntryTbl);
 
         updateEntryBtn.setText("View/Edit Entry Details");
+        updateEntryBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateEntryBtnActionPerformed(evt);
+            }
+        });
 
         deleteEntryBtn.setText("Delete Selected Entry");
+        deleteEntryBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteEntryBtnActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Sumary Period: ");
 
@@ -381,6 +391,14 @@ public class MainFrame extends javax.swing.JFrame {
     private void changeDateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeDateBtnActionPerformed
         ProgramManager.openChangeDateFrame();
     }//GEN-LAST:event_changeDateBtnActionPerformed
+
+    private void deleteEntryBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEntryBtnActionPerformed
+        ProgramManager.deleteTimeEntryAtIndex(timeEntryTbl.getSelectedRow());
+    }//GEN-LAST:event_deleteEntryBtnActionPerformed
+
+    private void updateEntryBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateEntryBtnActionPerformed
+        ProgramManager.editTimeEntryAtIndex(timeEntryTbl.getSelectedRow());
+    }//GEN-LAST:event_updateEntryBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addEntryBtn;

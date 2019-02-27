@@ -94,6 +94,18 @@ public class ProgramManager {
 		changeDateFrame.dispose();
 		mainFrame.setEnabled(true);
 	}
+	
+	public static void openDetailsFrame(TimeEntry timeEntry){
+		mainFrame.setEnabled(false);
+		detailsFrame = new DetailsFrame();
+		detailsFrame.setTimeEntry(timeEntry);
+		detailsFrame.setVisible(true);
+	}
+	
+	public static void closeDetailsFrame(){
+		detailsFrame.dispose();
+		mainFrame.setEnabled(true);
+	}
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Account and Login Methods">
@@ -241,7 +253,57 @@ public class ProgramManager {
 	}
 	// </editor-fold>
 	
-    private static void reportFatalError() {
+	// <editor-fold defaultstate="collapsed" desc="Update and Delete Methods">
+	public static void editTimeEntryAtIndex(int index) {
+		if(index == -1){
+			JOptionPane.showMessageDialog(null, "No item is selected.\nPlease select an item to edit.", "Edit Warning", JOptionPane.WARNING_MESSAGE);
+		}else{
+			openDetailsFrame(getTimeEntriesForDate(displayDate).get(index));
+		}
+	}
+	
+	public static void updateTimeEntry(TimeEntry timeEntry){
+		
+		if(timeEntry.getTitle().equals("")){
+			JOptionPane.showMessageDialog(detailsFrame, "A title is required", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		if(timeEntry.getDuration() <= 0.00){
+			JOptionPane.showMessageDialog(detailsFrame, "Duration must be a positive value", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		timeEntrySvc.updateTimeEntry(timeEntry);
+		activeAccount.setTimeEntries(timeEntrySvc.getTimeEntriesforAccountID(activeAccount.getID()));
+		accountSvc.updateAccount(activeAccount);
+		
+		closeDetailsFrame();
+		populateMainFrame();
+	}
+	
+	public static void deleteTimeEntryAtIndex(int index) {
+		if(index == -1){
+			JOptionPane.showMessageDialog(null, "No item is selected.\nPlease select an item to delete.", "Deletion Warning", JOptionPane.WARNING_MESSAGE);
+		}else{
+			int confirmDelete = JOptionPane.showConfirmDialog(mainFrame, "Are you sure you want to delete the selected item?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+			if(confirmDelete == JOptionPane.YES_OPTION){
+				
+				//delete selected entry from TimeEntry master list
+				timeEntrySvc.deleteTimeEntry(getTimeEntriesForDate(displayDate).get(index));
+				
+				//update account
+				activeAccount.setTimeEntries(timeEntrySvc.getTimeEntriesforAccountID(activeAccount.getID()));
+				accountSvc.updateAccount(activeAccount);
+				
+				//populate main frame
+				populateMainFrame();
+			}
+		}		
+	}
+	// </editor-fold>
+	
+	private static void reportFatalError() {
 		JOptionPane.showMessageDialog(null, "The program has encountered a serious error and will now close", "Fatal Error", JOptionPane.ERROR_MESSAGE);
 		closeProgram();
     }

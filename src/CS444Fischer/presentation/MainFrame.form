@@ -346,11 +346,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="View/Edit Entry Details"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="updateEntryBtnActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="deleteEntryBtn">
       <Properties>
         <Property name="text" type="java.lang.String" value="Delete Selected Entry"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteEntryBtnActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
