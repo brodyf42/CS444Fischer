@@ -34,7 +34,7 @@ public class DetailsFrame extends javax.swing.JFrame {
 		activeEntry = timeEntry;
 		titleFld.setText(activeEntry.getTitle());
 		notesFld.setText(activeEntry.getNotes());
-		durationFld.setText(Double.toString(activeEntry.getDuration()));
+		durationFld.setText(String.format("%.2f",activeEntry.getDuration()));
 		dateFld.setText(dateFormat.format(activeEntry.getDate()));
 		//category will be dealtwith when implementingmy custom use case
 	}
@@ -202,8 +202,8 @@ public class DetailsFrame extends javax.swing.JFrame {
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
         activeEntry.setTitle(titleFld.getText());
 		activeEntry.setNotes(notesFld.getText());
-		activeEntry.setDuration(Double.parseDouble(durationFld.getText()));
 		try {
+			activeEntry.setDuration(Double.parseDouble(durationFld.getText()));
 			activeEntry.setDate(dateFormat.parse(dateFld.getText()));
 		} catch (ParseException ex) {
 			Logger.getLogger(DetailsFrame.class.getName()).log(Level.SEVERE, null, ex);
