@@ -5,8 +5,10 @@
         <group>
             <file>file:/home/brody/dev/NetBeansProjects/CS444Fischer/src/CS444Fischer/business/ProgramManager.java</file>
             <file>file:/home/brody/dev/NetBeansProjects/CS444Fischer/src/CS444Fischer/presentation/DetailsFrame.java</file>
+            <file>file:/home/brody/dev/NetBeansProjects/CS444Fischer/src/CS444Fischer/presentation/SummaryTableModel.java</file>
             <file>file:/home/brody/dev/NetBeansProjects/CS444Fischer/src/CS444Fischer/presentation/MainFrame.java</file>
-            <file>file:/home/brody/dev/NetBeansProjects/CS444Fischer/src/CS444Fischer/presentation/ChangeDateFrame.java</file>
+            <file>file:/home/brody/dev/NetBeansProjects/CS444Fischer/src/CS444Fischer/presentation/CategoryFrame.java</file>
+            <file>file:/home/brody/dev/NetBeansProjects/CS444Fischer/src/CS444Fischer/domain/Account.java</file>
         </group>
     </open-files>
 </project-private>

@@ -43,6 +43,9 @@ public class ProgramManager {
 	// Helper objects
 	private static Date displayDate;
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy");
+	private static SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM yyyy");
+	private static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+	private static String summaryPeriod = "Day";
 
     static {
 		try {
@@ -98,6 +101,7 @@ public class ProgramManager {
 	public static void openDetailsFrame(TimeEntry timeEntry){
 		mainFrame.setEnabled(false);
 		detailsFrame = new DetailsFrame();
+		detailsFrame.setCategories(activeAccount.getCategories());
 		detailsFrame.setTimeEntry(timeEntry);
 		detailsFrame.setVisible(true);
 	}
@@ -105,6 +109,30 @@ public class ProgramManager {
 	public static void closeDetailsFrame(){
 		detailsFrame.dispose();
 		mainFrame.setEnabled(true);
+		// populate the main frame in case the categories were edited.
+		populateMainFrame();
+	}
+	
+	public static void openCategoryFrame(JFrame parent){
+		parent.setEnabled(false);
+		categoryFrame = new CategoryFrame();
+		categoryFrame.setParentFrame(parent);
+		categoryFrame.getCategoryTableModel().setCategories(activeAccount.getCategories());
+		categoryFrame.getCategoryTableModel().fireTableDataChanged();
+		categoryFrame.setUsername(activeAccount.getLogin().getUsername());
+		categoryFrame.setVisible(true);
+	}
+	
+	public static void closeCategoryFrame(){
+		JFrame parent = categoryFrame.getParentFrame();
+		parent.setEnabled(true);
+		if(parent.equals(mainFrame)){
+			populateMainFrame();
+		}else{
+			detailsFrame.setCategories(activeAccount.getCategories());
+		}
+		
+		categoryFrame.dispose();
 	}
     // </editor-fold>
 
@@ -161,6 +189,9 @@ public class ProgramManager {
 		login.setAccountID(account.getID());
 		// show error and close program if login update failed
 		if (!loginSvc.updateLogin(login)) {	reportFatalError();	}
+		
+		account.getCategories().add("uncategorized");
+		accountSvc.updateAccount(account);
 
 		JOptionPane.showMessageDialog(createAccountFrame, "Account created successfully.\nLogging in with new account.", "Account Created", JOptionPane.INFORMATION_MESSAGE);
 
@@ -224,8 +255,36 @@ public class ProgramManager {
 	private static void populateMainFrame(){
 		mainFrame.setTitle("Personal Time Tracker | " + activeAccount.getLogin().getUsername());
 		mainFrame.setDisplayedDate(dateFormat.format(displayDate));
+		mainFrame.setCategories(activeAccount.getCategories());
 		mainFrame.getTimeEntryTableModel().setTimeEntries(getTimeEntriesForDate(displayDate));
 		mainFrame.getTimeEntryTableModel().fireTableDataChanged();
+		mainFrame.getSummaryTableModel().setCategories(activeAccount.getCategories());
+		
+		switch(summaryPeriod){
+			case "Year":
+				mainFrame.getSummaryTableModel().setTimeEntries(getTimeEntriesForYear(displayDate));
+				mainFrame.setDisplayedSummaryDate(yearFormat.format(displayDate));
+				break;
+			case "Month":
+				mainFrame.getSummaryTableModel().setTimeEntries(getTimeEntriesForMonth(displayDate));
+				mainFrame.setDisplayedSummaryDate(monthFormat.format(displayDate));
+				break;
+			case "Day":
+			default:
+				mainFrame.getSummaryTableModel().setTimeEntries(getTimeEntriesForDate(displayDate));
+				mainFrame.setDisplayedSummaryDate(dateFormat.format(displayDate));
+		}
+		
+		if(summaryPeriod.equals("Day")){
+			mainFrame.getSummaryTableModel().setTimeEntries(getTimeEntriesForDate(displayDate));
+		}else if(summaryPeriod.equals("Day")){
+			
+		}
+		
+		
+		
+		
+		mainFrame.getSummaryTableModel().fireTableDataChanged();
 	}
 
 	public static void changeDisplayDate(String dateString) {
@@ -251,9 +310,29 @@ public class ProgramManager {
 		}
 		return list;
 	}
+	
+	private static List<TimeEntry> getTimeEntriesForMonth(Date date){
+		ArrayList list = new ArrayList<TimeEntry>();
+		for(TimeEntry te : activeAccount.getTimeEntries()){
+			if (te.getDate().getMonth() == date.getMonth() && te.getDate().getYear() == date.getYear()){
+				list.add(te);
+			}
+		}
+		return list;
+	}
+	
+	private static List<TimeEntry> getTimeEntriesForYear(Date date){
+		ArrayList list = new ArrayList<TimeEntry>();
+		for(TimeEntry te : activeAccount.getTimeEntries()){
+			if (te.getDate().getYear() == date.getYear()){
+				list.add(te);
+			}
+		}
+		return list;
+	}
 	// </editor-fold>
 	
-	// <editor-fold defaultstate="collapsed" desc="Update and Delete Methods">
+	// <editor-fold defaultstate="collapsed" desc="Time Entry Update and Delete Methods">
 	public static void editTimeEntryAtIndex(int index) {
 		if(index == -1){
 			JOptionPane.showMessageDialog(null, "No item is selected.\nPlease select an item to edit.", "Edit Warning", JOptionPane.WARNING_MESSAGE);
@@ -300,6 +379,58 @@ public class ProgramManager {
 				populateMainFrame();
 			}
 		}		
+	}
+	// </editor-fold>
+	
+	// <editor-fold defaultstate="collapsed" desc="Category Update and Delete Methods">
+	public static void addCategory(String category) {
+		if(category.equals("")){
+			JOptionPane.showMessageDialog(categoryFrame, "Category name is blank.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		if(activeAccount.getCategories().contains(category)){
+			JOptionPane.showMessageDialog(categoryFrame, "Category already exists. Please try again", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		activeAccount.getCategories().add(category);
+		accountSvc.updateAccount(activeAccount);
+		categoryFrame.getCategoryTableModel().setCategories(activeAccount.getCategories());
+		categoryFrame.getCategoryTableModel().fireTableDataChanged();
+	}
+	
+	public static void deleteCategory(String category){
+		if(category.equals("")){
+			JOptionPane.showMessageDialog(categoryFrame, "No item is selected.\nPlease select an item to delete.", "Deletion Warning", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		
+		if(activeAccount.getCategories().size() == 1){
+			JOptionPane.showMessageDialog(categoryFrame, "A user must have at least one category.\nCannot delete category.", "Deletion Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		for(TimeEntry te : activeAccount.getTimeEntries()){
+			if(category.equals(te.getCategory())){
+				JOptionPane.showMessageDialog(categoryFrame, "An entry with this category still exists.\nCannot delete category.", "Deletion Error", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+		}
+		
+		int confirmDelete = JOptionPane.showConfirmDialog(categoryFrame, "Are you sure you want to delete the selected item?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+		if(confirmDelete == JOptionPane.YES_OPTION){
+			activeAccount.getCategories().remove(category);
+			accountSvc.updateAccount(activeAccount);
+			categoryFrame.getCategoryTableModel().setCategories(activeAccount.getCategories());
+			categoryFrame.getCategoryTableModel().fireTableDataChanged();
+		}
+		
+	}
+	
+	public static void updateSummaryPeriod(String period){
+		summaryPeriod = period;
+		populateMainFrame();
 	}
 	// </editor-fold>
 	

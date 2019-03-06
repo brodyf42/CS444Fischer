@@ -5,19 +5,43 @@
  */
 package CS444Fischer.presentation;
 
+import CS444Fischer.business.ProgramManager;
+import javax.swing.JFrame;
+
 /**
  *
  * @author Brody Fischer
  */
 public class CategoryFrame extends javax.swing.JFrame {
 
+	private CategoryTableModel categoryModel;
+	private JFrame parentFrame;
+	
     /**
      * Creates new form CategoryFrame
      */
     public CategoryFrame() {
+		setLocationRelativeTo(null);
         initComponents();
+		categoryModel = new CategoryTableModel();
+		categoryTbl.setModel(categoryModel);
+		getRootPane().setDefaultButton(addBtn);
     }
 
+	public CategoryTableModel getCategoryTableModel(){ return categoryModel; }
+	
+	public void setUsername(String username){
+		usernameLbl.setText(username);
+	}
+	
+	public void setParentFrame(JFrame parentFrame){
+		this.parentFrame = parentFrame;
+	}
+	
+	public JFrame getParentFrame(){
+		return parentFrame;
+	}
+	
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -28,49 +52,46 @@ public class CategoryFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        categoryTbl = new javax.swing.JTable();
+        categoryFld = new javax.swing.JTextField();
+        deleteBtn = new javax.swing.JButton();
+        addBtn = new javax.swing.JButton();
+        closeBtn = new javax.swing.JButton();
+        usernameLbl = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Category Editor");
         setResizable(false);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"Category 1"},
-                {"Category 2"},
-                {"Uncategorized"},
-                {null}
-            },
-            new String [] {
-                "Category Name"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class
-            };
+        jScrollPane1.setViewportView(categoryTbl);
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+        deleteBtn.setText("Delete Selected");
+        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBtnActionPerformed(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
 
-        jButton1.setText("Delete Selected");
+        addBtn.setText("Add");
+        addBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addBtnActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Add");
+        closeBtn.setText("Close");
+        closeBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closeBtnActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Cancel");
-
-        jButton4.setText("Save Changes");
+        usernameLbl.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        usernameLbl.setText("Username");
 
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        jLabel1.setText("Categories for: Username");
+        jLabel1.setText("Categories for:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -80,52 +101,72 @@ public class CategoryFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField1)
+                        .addComponent(categoryFld)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2))
+                        .addComponent(addBtn))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(closeBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(deleteBtn))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 74, Short.MAX_VALUE)
-                        .addComponent(jButton3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addComponent(usernameLbl)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(usernameLbl)
+                    .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(addBtn)
+                    .addComponent(categoryFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4)
-                    .addComponent(jButton1))
+                    .addComponent(closeBtn)
+                    .addComponent(deleteBtn))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
+        ProgramManager.addCategory(categoryFld.getText());
+		categoryFld.setText("");
+    }//GEN-LAST:event_addBtnActionPerformed
+
+    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
+        String category;
+		if(categoryTbl.getSelectedRow() == -1){
+			category = "";
+		}else{
+			category = (String) categoryModel.getValueAt(categoryTbl.getSelectedRow(),0);
+		}
+		ProgramManager.deleteCategory(category);
+    }//GEN-LAST:event_deleteBtnActionPerformed
+
+    private void closeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeBtnActionPerformed
+        ProgramManager.closeCategoryFrame();
+    }//GEN-LAST:event_closeBtnActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton addBtn;
+    private javax.swing.JTextField categoryFld;
+    private javax.swing.JTable categoryTbl;
+    private javax.swing.JButton closeBtn;
+    private javax.swing.JButton deleteBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel usernameLbl;
     // End of variables declaration//GEN-END:variables
 }

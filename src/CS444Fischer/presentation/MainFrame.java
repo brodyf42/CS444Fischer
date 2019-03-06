@@ -6,6 +6,9 @@
 package CS444Fischer.presentation;
 
 import CS444Fischer.business.ProgramManager;
+import java.util.Set;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 
 /**
  *
@@ -14,6 +17,7 @@ import CS444Fischer.business.ProgramManager;
 public class MainFrame extends javax.swing.JFrame {
 
 	private TimeEntryTableModel timeEntryModel;
+	private SummaryTableModel summaryModel;
 	
     /**
      * Creates new form MainFrame
@@ -23,15 +27,25 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
 		timeEntryModel = new TimeEntryTableModel();
 		timeEntryTbl.setModel(timeEntryModel);
+		summaryModel = new SummaryTableModel();
+		summaryTbl.setModel(summaryModel);
 		getRootPane().setDefaultButton(addEntryBtn);
     }
 
 	public TimeEntryTableModel getTimeEntryTableModel(){ return timeEntryModel; }
+	public SummaryTableModel getSummaryTableModel(){ return summaryModel; }
 	
 	public void setDisplayedDate(String dateText){
 		dateFld.setText(dateText);
 		entryDateLbl.setText(dateText);
-		usageDateLbl.setText(dateText);
+	}
+	
+	public void setDisplayedSummaryDate(String dateText){
+		summaryDateLbl.setText(dateText);
+	}
+	
+	public void setCategories(Set<String> categories){
+		categoryCombo.setModel(new DefaultComboBoxModel(categories.toArray(new String[categories.size()])));
 	}
 	
 	public void clearTimeEntryForm(){
@@ -69,18 +83,17 @@ public class MainFrame extends javax.swing.JFrame {
         updateEntryBtn = new javax.swing.JButton();
         deleteEntryBtn = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        dayRadio = new javax.swing.JRadioButton();
-        monthRadio = new javax.swing.JRadioButton();
-        yearRadio = new javax.swing.JRadioButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        summaryTbl = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         logoutBtn = new javax.swing.JButton();
         changeDateBtn = new javax.swing.JButton();
         entryDateLbl = new javax.swing.JLabel();
-        usageDateLbl = new javax.swing.JLabel();
+        summaryDateLbl = new javax.swing.JLabel();
+        summaryCombo = new javax.swing.JComboBox<>();
+        summaryUpdateBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Personal Time Tracker | Username");
@@ -99,9 +112,12 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel2.setText("Notes:");
 
-        categoryCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "< None >" }));
-
         editCategoriesBtn.setText("Edit Categories");
+        editCategoriesBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editCategoriesBtnActionPerformed(evt);
+            }
+        });
 
         durationFld.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         durationFld.setToolTipText("hours");
@@ -186,35 +202,6 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        timeEntryTbl.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"", "", null},
-                {"", "", null},
-                {"", "", null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "Title", "Category", "Duration (hours)"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Double.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
         timeEntryTbl.setRowHeight(24);
         timeEntryTbl.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         timeEntryTbl.getTableHeader().setReorderingAllowed(false);
@@ -237,41 +224,8 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel3.setText("Sumary Period: ");
 
-        dayRadio.setSelected(true);
-        dayRadio.setText("Day");
-
-        monthRadio.setText("Month");
-
-        yearRadio.setText("Year");
-
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"", null},
-                {"", null},
-                {null, null},
-                {null, null}
-            },
-            new String [] {
-                "Category", "Time (hours)"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Float.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jTable2.setToolTipText("");
-        jScrollPane2.setViewportView(jTable2);
+        summaryTbl.setToolTipText("");
+        jScrollPane2.setViewportView(summaryTbl);
 
         jLabel7.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         jLabel7.setText("Add New Time Entry");
@@ -299,7 +253,17 @@ public class MainFrame extends javax.swing.JFrame {
 
         entryDateLbl.setText("M/D/YYYY");
 
-        usageDateLbl.setText("[Date|Month|Year]");
+        summaryDateLbl.setText("[Date|Month|Year]");
+
+        summaryCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Day", "Month", "Year" }));
+        summaryCombo.setToolTipText("");
+
+        summaryUpdateBtn.setText("Update");
+        summaryUpdateBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                summaryUpdateBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -328,16 +292,14 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addComponent(jLabel3)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(dayRadio)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(monthRadio)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(yearRadio))
+                            .addComponent(summaryCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(summaryUpdateBtn))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel9)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(usageDateLbl))
+                                .addComponent(summaryDateLbl))
                             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel7)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -360,7 +322,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel9)
-                            .addComponent(usageDateLbl))
+                            .addComponent(summaryDateLbl))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE))
@@ -371,9 +333,8 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(deleteEntryBtn))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel3)
-                        .addComponent(dayRadio)
-                        .addComponent(monthRadio)
-                        .addComponent(yearRadio)))
+                        .addComponent(summaryCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(summaryUpdateBtn)))
                 .addContainerGap())
         );
 
@@ -400,12 +361,19 @@ public class MainFrame extends javax.swing.JFrame {
         ProgramManager.editTimeEntryAtIndex(timeEntryTbl.getSelectedRow());
     }//GEN-LAST:event_updateEntryBtnActionPerformed
 
+    private void editCategoriesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCategoriesBtnActionPerformed
+        ProgramManager.openCategoryFrame(this);
+    }//GEN-LAST:event_editCategoriesBtnActionPerformed
+
+    private void summaryUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_summaryUpdateBtnActionPerformed
+        ProgramManager.updateSummaryPeriod((String) summaryCombo.getSelectedItem());
+    }//GEN-LAST:event_summaryUpdateBtnActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addEntryBtn;
     private javax.swing.JComboBox<String> categoryCombo;
     private javax.swing.JButton changeDateBtn;
     private javax.swing.JFormattedTextField dateFld;
-    private javax.swing.JRadioButton dayRadio;
     private javax.swing.JButton deleteEntryBtn;
     private javax.swing.JFormattedTextField durationFld;
     private javax.swing.JButton editCategoriesBtn;
@@ -424,14 +392,14 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable2;
     private javax.swing.JButton logoutBtn;
-    private javax.swing.JRadioButton monthRadio;
     private javax.swing.JTextArea notesFld;
+    private javax.swing.JComboBox<String> summaryCombo;
+    private javax.swing.JLabel summaryDateLbl;
+    private javax.swing.JTable summaryTbl;
+    private javax.swing.JButton summaryUpdateBtn;
     private javax.swing.JTable timeEntryTbl;
     private javax.swing.JTextField titleFld;
     private javax.swing.JButton updateEntryBtn;
-    private javax.swing.JLabel usageDateLbl;
-    private javax.swing.JRadioButton yearRadio;
     // End of variables declaration//GEN-END:variables
 }

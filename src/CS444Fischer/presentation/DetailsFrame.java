@@ -9,8 +9,11 @@ import CS444Fischer.business.ProgramManager;
 import CS444Fischer.domain.TimeEntry;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 
 /**
  *
@@ -30,15 +33,20 @@ public class DetailsFrame extends javax.swing.JFrame {
 		getRootPane().setDefaultButton(saveBtn);
     }
 	
+	public void setCategories(Set<String> categories){
+		categoryCombo.setModel(new DefaultComboBoxModel(categories.toArray(new String[categories.size()])));
+	}
+	
 	public void setTimeEntry(TimeEntry timeEntry){
 		activeEntry = timeEntry;
 		titleFld.setText(activeEntry.getTitle());
 		notesFld.setText(activeEntry.getNotes());
 		durationFld.setText(String.format("%.2f",activeEntry.getDuration()));
 		dateFld.setText(dateFormat.format(activeEntry.getDate()));
+		categoryCombo.setSelectedItem(timeEntry.getCategory());
 		//category will be dealtwith when implementingmy custom use case
 	}
-
+	
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -81,9 +89,12 @@ public class DetailsFrame extends javax.swing.JFrame {
 
         jLabel2.setText("Notes:");
 
-        categoryCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Uncategorized" }));
-
         editCategoriesBtn.setText("Edit Categories");
+        editCategoriesBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editCategoriesBtnActionPerformed(evt);
+            }
+        });
 
         dateFld.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("M/d/yyyy"))));
 
@@ -202,6 +213,7 @@ public class DetailsFrame extends javax.swing.JFrame {
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
         activeEntry.setTitle(titleFld.getText());
 		activeEntry.setNotes(notesFld.getText());
+		activeEntry.setCategory((String) categoryCombo.getSelectedItem());
 		try {
 			activeEntry.setDuration(Double.parseDouble(durationFld.getText()));
 			activeEntry.setDate(dateFormat.parse(dateFld.getText()));
@@ -210,6 +222,10 @@ public class DetailsFrame extends javax.swing.JFrame {
 		}
 		ProgramManager.updateTimeEntry(activeEntry);
     }//GEN-LAST:event_saveBtnActionPerformed
+
+    private void editCategoriesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCategoriesBtnActionPerformed
+        ProgramManager.openCategoryFrame(this);
+    }//GEN-LAST:event_editCategoriesBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelBtn;

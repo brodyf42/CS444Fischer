@@ -56,17 +56,15 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="dayRadio" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="monthRadio" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="yearRadio" min="-2" max="-2" attributes="0"/>
+                          <Component id="summaryCombo" min="-2" pref="102" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="summaryUpdateBtn" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="103" alignment="1" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="usageDateLbl" min="-2" max="-2" attributes="0"/>
+                              <Component id="summaryDateLbl" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -96,7 +94,7 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="usageDateLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="summaryDateLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane2" pref="0" max="32767" attributes="0"/>
@@ -111,9 +109,8 @@
                   </Group>
                   <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="dayRadio" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="monthRadio" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="yearRadio" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="summaryCombo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="summaryUpdateBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -240,9 +237,7 @@
         <Component class="javax.swing.JComboBox" name="categoryCombo">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="1">
-                <StringItem index="0" value="&lt; None &gt;"/>
-              </StringArray>
+              <StringArray count="0"/>
             </Property>
           </Properties>
           <AuxValues>
@@ -253,6 +248,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Edit Categories"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editCategoriesBtnActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="durationFld">
           <Properties>
@@ -309,29 +307,6 @@
       <SubComponents>
         <Component class="javax.swing.JTable" name="timeEntryTbl">
           <Properties>
-            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="3" rowCount="7">
-                <Column editable="false" title="Title" type="java.lang.String">
-                  <Data value=""/>
-                  <Data value=""/>
-                  <Data value=""/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                </Column>
-                <Column editable="false" title="Category" type="java.lang.String">
-                  <Data value=""/>
-                  <Data value=""/>
-                  <Data value=""/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                </Column>
-                <Column editable="false" title="Duration (hours)" type="java.lang.Double"/>
-              </Table>
-            </Property>
             <Property name="rowHeight" type="int" value="24"/>
             <Property name="selectionMode" type="int" value="0"/>
             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
@@ -363,22 +338,6 @@
         <Property name="text" type="java.lang.String" value="Sumary Period: "/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JRadioButton" name="dayRadio">
-      <Properties>
-        <Property name="selected" type="boolean" value="true"/>
-        <Property name="text" type="java.lang.String" value="Day"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JRadioButton" name="monthRadio">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Month"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JRadioButton" name="yearRadio">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Year"/>
-      </Properties>
-    </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane2">
       <AuxValues>
         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -386,19 +345,8 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="jTable2">
+        <Component class="javax.swing.JTable" name="summaryTbl">
           <Properties>
-            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="2" rowCount="4">
-                <Column editable="false" title="Category" type="java.lang.String">
-                  <Data value=""/>
-                  <Data value=""/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                </Column>
-                <Column editable="false" title="Time (hours)" type="java.lang.Float"/>
-              </Table>
-            </Property>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
@@ -450,10 +398,33 @@
         <Property name="text" type="java.lang.String" value="M/D/YYYY"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="usageDateLbl">
+    <Component class="javax.swing.JLabel" name="summaryDateLbl">
       <Properties>
         <Property name="text" type="java.lang.String" value="[Date|Month|Year]"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="summaryCombo">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="3">
+            <StringItem index="0" value="Day"/>
+            <StringItem index="1" value="Month"/>
+            <StringItem index="2" value="Year"/>
+          </StringArray>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" value=""/>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JButton" name="summaryUpdateBtn">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Update"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="summaryUpdateBtnActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
