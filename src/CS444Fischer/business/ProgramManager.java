@@ -275,15 +275,6 @@ public class ProgramManager {
 				mainFrame.setDisplayedSummaryDate(dateFormat.format(displayDate));
 		}
 		
-		if(summaryPeriod.equals("Day")){
-			mainFrame.getSummaryTableModel().setTimeEntries(getTimeEntriesForDate(displayDate));
-		}else if(summaryPeriod.equals("Day")){
-			
-		}
-		
-		
-		
-		
 		mainFrame.getSummaryTableModel().fireTableDataChanged();
 	}
 
