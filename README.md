@@ -1,5 +1,5 @@
 # Personal Time Tracker
-This application provides a convenient tool for tracking daily activites.  There is functionality included for catagorizing and summarizing time usage as well. The application supports multiple user accounts, each with its own set of activity categories.
+This application provides a convenient tool for tracking daily activites.  There is functionality included for categorizing and summarizing time usage as well. The application supports multiple user accounts, each with its own set of activity categories.
 
 ## Main Interface
 The main interface coinsists of a full list of activities entered for a given day, a form for adding new activities, and a summary of categorized time usage for a given time period (day/month/year).
